@@ -30,3 +30,11 @@ input {
   background-color: rgb(130, 130, 130)
 }
 */
+
+/* Removes from the password input the default reveal button */
+input[type="password"]::-ms-reveal {
+  display: none;
+}
+input[type="password"]::-webkit-textfield-decoration-container {
+  display: none;
+}

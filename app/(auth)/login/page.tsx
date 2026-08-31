@@ -3,27 +3,34 @@
 
 import { useState } from "react";
 import Link from "next/link"
+import { signIn } from "next-auth/react";
+import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline"
+import { useRouter } from "next/navigation";
 
 export default function LoginPage(){
   const [errorMessage, setErrorMessage] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const router = useRouter();
 
   async function handleSubmit(e: React.SyntheticEvent<HTMLFormElement>) {
    e.preventDefault() 
 
    const formData = new FormData(e.currentTarget);
-   const email = formData.get("email");
-   const password = formData.get("password");
+   const email = formData.get("email") as string;
+   const password = formData.get("password") as string;
   
-   const res = await fetch("/api/login", {
-    method: "POST",
-    body: JSON.stringify({ email, password }),
-    headers: { "Content-Type": "application/json"},
+   const res = await signIn("credentials", {
+    email,
+    password,
+    redirect: false,
+    callbackUrl: "/home"
    });
 
-   if (res.ok) {
-    setErrorMessage("Login realizado com sucesso!")
-   } else {
-    setErrorMessage("Email ou senha inválidos!");
+   if (res?.error) {
+    setErrorMessage("Email ou senha inválidos!")
+   } else if (res?.ok && res?.url) {
+    setErrorMessage("Login com sucesso!");
+    router.push(res.url);
    }
   }
 
@@ -40,13 +47,23 @@ export default function LoginPage(){
           placeholder="Email" 
           required 
         className="w-full p-3 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500" />
-        <input 
-          type="password" 
-          name="password" 
-          id="password" 
-          placeholder="Password" 
-          required 
-          className="w-full p-3 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500" />
+        <div className="relative">
+          <input 
+            type={showPassword ? "text" : "password"} 
+            name="password" 
+            id="password" 
+            placeholder="Password" 
+            required 
+            className="w-full p-3 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500" 
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-3 top-3 text-sm text-blue-600"
+              >
+              {showPassword ? <EyeSlashIcon className="h-5 w-5"/> : <EyeIcon className="h-5 w-5"/>}
+            </button>
+          </div>
 
           <p className="text-red-600 text-sm font-medium">{errorMessage}</p>
 
