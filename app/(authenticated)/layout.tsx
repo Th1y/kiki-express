@@ -14,8 +14,6 @@ export default function authenticatedLayout({ children }: { children: React.Reac
                     {children}
                 </main>
             </div>
-
-
         </div>
     )
 }
