@@ -2,7 +2,7 @@
 "use client";
 
 import Link from "next/link";
-import LogoutButton from "./logout-button";
+import LogoutButton from "../logout-button";
 
 export default function Sidebar() {
     return (
