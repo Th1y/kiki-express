@@ -30,14 +30,24 @@ export default function proposalPage() {
   // result in kWp
   const totalKwp = (qtdPanel * PanelPower) / 1000;
 
+ 
   // fills in the text fields
-  form.getTextField("name").setText(payload.name as string);
-  form.getTextField("cpf").setText(payload.cpf as string);
-  form.getTextField("phone").setText(payload.phone as string);
-  form.getTextField("city").setText(payload.city as string);
-  form.getTextField("adress").setText(payload.adress as string);
-  form.getTextField("houseNumber").setText(payload.houseNumber as string);
-  form.getTextField("state").setText(payload.state as string);
+
+   // simple fields
+      const simpleFields: Record<string, string> = {
+        name: "name",
+        cpf: "cpf",
+        phone: "phone",
+        adress: "adress",
+        houseNumber: "houseNumber",
+        city: "city",
+        state: "state",
+      };
+
+      for (const [pdfField, payloadKey] of Object.entries(simpleFields)) {
+        form.getTextField(pdfField).setText(payload[payloadKey] as string);
+      }
+      
   form.getTextField("panelQuantity").setText(payload.panelQuantity as string);
   form.getTextField("panelPower").setText(payload.panelPower as string);
   form.getTextField("inverterBrand").setText(payload.inverterBrand as string);
