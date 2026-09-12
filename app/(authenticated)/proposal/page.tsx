@@ -123,6 +123,7 @@ form.removeField(panelField);
                 <input name="panelPower" placeholder="Panel Power" className="border p-2 rounded" />
                 <input name="inverterBrand" placeholder="inverter Brand" className="border p-2 rounded" />
                 <input name="inverterPower" placeholder="Inverter Power" className="border p-2 rounded" />
+                <input name="projectValue" placeholder="project Value" className="border p-2 rounded" />
                 <button
                 type="submit"
                 disabled={loading}
