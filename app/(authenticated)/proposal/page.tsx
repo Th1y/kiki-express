@@ -6,9 +6,10 @@ import { PDFDocument } from "pdf-lib"
 import { clientDataFields } from "./utils/fields/fillClientDataFields";
 import { fillEquipmentFields } from "./utils/fields/FillSolarEquipmentFields";
 import { fillProjectFields } from "./utils/fields/fillProjectFields";
+import { replaceImageField } from "./utils/fields/replaceImageField";
 
 export default function ProposalPage() {
-    const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
 
     async function handleSubmit(e: React.SyntheticEvent<HTMLFormElement>) {
   e.preventDefault();
@@ -27,53 +28,10 @@ export default function ProposalPage() {
   fillEquipmentFields(form, payload);
   fillProjectFields(form, payload);
 
- // replace field inverterImg with image
-const inverterImgBytes = await fetch("/auxsol.png").then(res => res.arrayBuffer());
-const inverterImg = await pdfDoc.embedPng(inverterImgBytes);
-
-const inverterField = form.getTextField("inverterImg");
-const inverterWidget = inverterField.acroField.getWidgets()[0];
-const inverterRect = inverterWidget.getRectangle();
-const inverterPageRef = inverterWidget.P();
-const inverterPage = pdfDoc.getPages().find(p => p.ref === inverterPageRef);
-
-if (inverterPage) {
-  const imgDims = inverterImg.scale(1);
-  const ratio = Math.min(inverterRect.width / imgDims.width, inverterRect.height / imgDims.height);
-
-  inverterPage.drawImage(inverterImg, {
-    x: inverterRect.x,
-    y: inverterRect.y,
-    width: imgDims.width * ratio,
-    height: imgDims.height * ratio,
-  });
-}
-form.removeField(inverterField);
-
-// replace field panelImg with image
-const panelImgBytes = await fetch("/panel.png").then(res => res.arrayBuffer());
-const panelImg = await pdfDoc.embedPng(panelImgBytes);
-
-const panelField = form.getTextField("panelImg");
-const panelWidget = panelField.acroField.getWidgets()[0];
-const panelRect = panelWidget.getRectangle();
-const panelPageRef = panelWidget.P();
-const panelPage = pdfDoc.getPages().find(p => p.ref === panelPageRef);
-
-if (panelPage) {
-  const panelDims = panelImg.scale(1);
-  const panelRatio = Math.min(panelRect.width / panelDims.width, panelRect.height / panelDims.height);
-
-  panelPage.drawImage(panelImg, {
-    x: panelRect.x,
-    y: panelRect.y,
-    width: panelDims.width * panelRatio,
-    height: panelDims.height * panelRatio,
-  });
-}
-form.removeField(panelField);
-
-
+  // Fill in the image fields in template
+  await replaceImageField(form, pdfDoc, "inverterImg", "/auxsol.png");
+  await replaceImageField(form, pdfDoc, "panelImg", "/panel.png")
+ 
   form.flatten();
   const pdfBytes = await pdfDoc.save();
 
