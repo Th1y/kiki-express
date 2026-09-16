@@ -4,6 +4,7 @@
 import { useState } from "react"
 import { PDFDocument } from "pdf-lib"
 import { clientDataFields } from "./utils/fields/fillClientDataFields";
+import { fillEquipmentFields } from "./utils/fields/FillSolarEquipmentFields";
 
 export default function ProposalPage() {
     const [loading, setLoading] = useState(false);
@@ -33,13 +34,9 @@ export default function ProposalPage() {
 
   // fill in the template fields
   clientDataFields(form, payload);
+  fillEquipmentFields(form, payload);
       
-  form.getTextField("panelQuantity").setText(payload.panelQuantity as string);
-  form.getTextField("panelPower").setText(payload.panelPower as string);
-  form.getTextField("inverterBrand").setText(payload.inverterBrand as string);
-  form.getTextField("inverterPower").setText(payload.inverterPower as string);
   form.getTextField("projectValue").setText(payload.projectValue as string);
-  form.getTextField("kwp").setText(totalKwp.toString());
   form.getTextField("todayDate").setText(formattedDate);
 
  // replace field inverterImg with image
