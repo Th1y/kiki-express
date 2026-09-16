@@ -7,6 +7,7 @@ import { clientDataFields } from "./utils/fields/fillClientDataFields";
 import { fillEquipmentFields } from "./utils/fields/FillSolarEquipmentFields";
 import { fillProjectFields } from "./utils/fields/fillProjectFields";
 import { replaceImageField } from "./utils/fields/replaceImageField";
+import { downloadPdf } from "./utils/downloadPdf";
 
 export default function ProposalPage() {
   const [loading, setLoading] = useState(false);
@@ -36,12 +37,8 @@ export default function ProposalPage() {
   const pdfBytes = await pdfDoc.save();
 
   // download of PDF
-  const blob = new Blob([pdfBytes as BlobPart], { type: "application/pdf" });
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement("a");
-  link.href = url;
-  link.download = "proposal.pdf";
-  link.click();
+  const fileName = (payload.fileName as string) || undefined;
+  downloadPdf(pdfBytes, fileName)
 
   setLoading(false);
 }
@@ -63,6 +60,7 @@ export default function ProposalPage() {
                 <input name="inverterBrand" placeholder="inverter Brand" className="border p-2 rounded" />
                 <input name="inverterPower" placeholder="Inverter Power" className="border p-2 rounded" />
                 <input name="projectValue" placeholder="project Value" className="border p-2 rounded" />
+                <input name="fileName" placeholder="File name" className="border p-2 rounded" />
                 <button
                 type="submit"
                 disabled={loading}
