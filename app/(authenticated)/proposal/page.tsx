@@ -5,6 +5,7 @@ import { useState } from "react"
 import { PDFDocument } from "pdf-lib"
 import { clientDataFields } from "./utils/fields/fillClientDataFields";
 import { fillEquipmentFields } from "./utils/fields/FillSolarEquipmentFields";
+import { fillProjectFields } from "./utils/fields/fillProjectFields";
 
 export default function ProposalPage() {
     const [loading, setLoading] = useState(false);
@@ -21,23 +22,10 @@ export default function ProposalPage() {
   const pdfDoc = await PDFDocument.load(existingPdfBytes);
   const form = pdfDoc.getForm();
 
-  // panel quantity and power
-  const qtdPanel = Number(payload.panelQuantity);
-  const PanelPower = Number(payload.panelPower);
-
-  // today date
-  const today = new Date();
-  const formattedDate = today.toLocaleDateString("pt-BR");
-
-  // result in kWp
-  const totalKwp = (qtdPanel * PanelPower) / 1000;
-
   // fill in the template fields
   clientDataFields(form, payload);
   fillEquipmentFields(form, payload);
-      
-  form.getTextField("projectValue").setText(payload.projectValue as string);
-  form.getTextField("todayDate").setText(formattedDate);
+  fillProjectFields(form, payload);
 
  // replace field inverterImg with image
 const inverterImgBytes = await fetch("/auxsol.png").then(res => res.arrayBuffer());
