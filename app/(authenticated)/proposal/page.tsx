@@ -4,7 +4,7 @@
 import { useState } from "react"
 import { PDFDocument } from "pdf-lib"
 
-export default function proposalPage() {
+export default function ProposalPage() {
     const [loading, setLoading] = useState(false);
 
     async function handleSubmit(e: React.SyntheticEvent<HTMLFormElement>) {
