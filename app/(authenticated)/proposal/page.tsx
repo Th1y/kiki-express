@@ -3,6 +3,7 @@
 
 import { useState } from "react"
 import { PDFDocument } from "pdf-lib"
+import { clientDataFields } from "./utils/fields/fillClientDataFields";
 
 export default function ProposalPage() {
     const [loading, setLoading] = useState(false);
@@ -30,23 +31,8 @@ export default function ProposalPage() {
   // result in kWp
   const totalKwp = (qtdPanel * PanelPower) / 1000;
 
- 
-  // fills in the text fields
-
-   // simple fields
-      const simpleFields: Record<string, string> = {
-        name: "name",
-        cpf: "cpf",
-        phone: "phone",
-        adress: "adress",
-        houseNumber: "houseNumber",
-        city: "city",
-        state: "state",
-      };
-
-      for (const [pdfField, payloadKey] of Object.entries(simpleFields)) {
-        form.getTextField(pdfField).setText(payload[payloadKey] as string);
-      }
+  // fill in the template fields
+  clientDataFields(form, payload);
       
   form.getTextField("panelQuantity").setText(payload.panelQuantity as string);
   form.getTextField("panelPower").setText(payload.panelPower as string);
@@ -126,7 +112,7 @@ form.removeField(panelField);
                 <input name="cpf" placeholder="CPF" className="border p-2 rounded" />
                 <input name="phone" placeholder="Phone" className="border p-2 rounded"/>
                 <input name="city" placeholder="City" className="border p-2 rounded" />
-                <input name="adress" placeholder="Adress" className="border p-2 rounded" />
+                <input name="address" placeholder="Address" className="border p-2 rounded" />
                 <input name="houseNumber" placeholder="House Number" className="border p-2 rounded" />
                 <input name="state" placeholder="State" className="border p-2 rounded" />
                 <input name="panelQuantity" placeholder="Panel Quantity" className="border p-2 rounded" />
