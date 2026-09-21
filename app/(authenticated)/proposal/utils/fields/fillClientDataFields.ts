@@ -7,6 +7,7 @@ export function clientDataFields(
 ) {
   // simple fields
   const simpleFields: Record<string, string> = {
+    proposalNumber: "proposalNumber",
     name: "name",
     cpf: "cpf",
     phone: "phone",
