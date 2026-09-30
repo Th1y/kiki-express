@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@heroicons/react": "2.2.0",
+    "@supabase/supabase-js": "^2.117.1",
     "@upstash/ratelimit": "^2.0.8",
     "@upstash/redis": "^1.38.2",
     "next": "16.2.9",
@@ -25,6 +26,7 @@
     "@types/react-dom": "^19.2.5",
     "eslint": "^9",
     "eslint-config-next": "16.2.9",
+    "supabase": "^2.118.0",
     "tailwindcss": "^4",
     "typescript": "^5"
   }
