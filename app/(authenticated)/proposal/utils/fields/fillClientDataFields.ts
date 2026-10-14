@@ -9,7 +9,9 @@ export function clientDataFields(
   const simpleFields: Record<string, string> = {
     proposalNumber: "proposalNumber",
     name: "name",
+    name2: "name",
     cpf: "cpf",
+    cpf2: "cpf",
     phone: "phone",
     address: "address",
     houseNumber: "houseNumber",
