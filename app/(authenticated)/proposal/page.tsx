@@ -3,6 +3,8 @@
 
 import { useState } from "react"
 import { PDFDocument } from "pdf-lib"
+import fontkit from "@pdf-lib/fontkit"
+import { applyTemplateFonts } from "./utils/fonts/applyTemplateFonts"
 import { clientDataFields } from "./utils/fields/fillClientDataFields";
 import { fillEquipmentFields } from "./utils/fields/FillSolarEquipmentFields";
 import { fillProjectFields } from "./utils/fields/fillProjectFields";
@@ -21,14 +23,31 @@ export default function ProposalPage() {
     const payload = Object.fromEntries(formData.entries());
 
     // load template
-    const existingPdfBytes = await fetch("/temp1.pdf").then(res => res.arrayBuffer());
+    const existingPdfBytes = await fetch(process.env.NEXT_PUBLIC_PROPOSAL_URL!).then(res => res.arrayBuffer());
     const pdfDoc = await PDFDocument.load(existingPdfBytes);
     const form = pdfDoc.getForm();
+
+    pdfDoc.registerFontkit(fontkit);
+
+    const sansBytes = await fetch("/fonts/LiberationSans-Regular.ttf")
+      .then(res => res.arrayBuffer());
+
+    const sansBoldBytes = await fetch("/fonts/LiberationSans-Bold.ttf")
+      .then(res => res.arrayBuffer());
+
+  const sansFont = await pdfDoc.embedFont(sansBytes);
+  const sansBoldFont = await pdfDoc.embedFont(sansBoldBytes);
 
     // fill in the template fields
     clientDataFields(form, payload);
     fillEquipmentFields(form, payload);
     fillProjectFields(form, payload);
+
+    applyTemplateFonts(
+    form,
+    sansFont,
+    sansBoldFont
+    );
 /*
     // Fill in the image fields in template
     await replaceImageField(form, pdfDoc, "inverterImg", "/auxsol.png");
